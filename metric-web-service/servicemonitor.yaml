@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: metric-web-service
+  namespace: monitoring
+  labels:
+    release: kube-prometheus  # Must match Prometheus's selector
+spec:
+  selector:
+    matchLabels:
+      app: service-flask-metrics  # Must match your Service's label
+  namespaceSelector:
+    matchNames:
+      - default  # <- the namespace where your Flask service is running
+  endpoints:
+    - port: http  # Optional if you use `name` in the Service
+      path: /metrics
+      interval: 15s
